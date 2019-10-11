@@ -1,30 +1,21 @@
 import React from 'react';
-import Axios from 'axios';
 import {Link} from 'react-router-dom';
+import postImage from '../post-time.png';
+import { connect } from 'react-redux';
 
 class Home extends React.Component{
-    state = {
-        posts: []
-    }
-    componentDidMount(){
-        Axios.get('https://jsonplaceholder.typicode.com/posts')
-            .then(res => {
-                console.log(res.data)
-                this.setState({
-                    posts: res.data.slice(0,10)
-                })
-            }).catch(err => console.log(err));
-    }
-
+   
     render() {
-        const { posts } = this.state;
+        
+        const { posts } = this.props;
         const postList = posts.length ? (
             posts.map(post => {
                 return(
                     <div className="post card" key={post.id}>
+                    <img src={postImage} alt="post image" />
                         <div className="card-content">
                         <Link to={'/posts/' + post.id}>
-                           <span className="card-title">{post.title}</span>
+                           <span className="card-title red-text">{post.title}</span>
                         </Link>    
                         <p>{post.body}</p>
                         </div>
@@ -32,9 +23,9 @@ class Home extends React.Component{
                 )
             })
             
-        ) : (<p className="center">No posts found!</p>);
+        ) : (<p className="center">No Post Found!</p>);
         return(
-            <div className="container">
+            <div className="container home">
                 <h3 className="center">Home</h3>
                 {postList}
             </div>
@@ -42,4 +33,10 @@ class Home extends React.Component{
     } 
 }
 
-export default Home;
+const mapStateToProps = (state) => {
+    return {
+        posts: state.posts
+    }
+}
+
+export default connect(mapStateToProps)(Home);
